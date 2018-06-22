@@ -58,6 +58,7 @@ Access* Method_getAccess(Method * self){
  * @param ...
  * @return
  */
+//todo 如何将可变参数直接传给function执行。
 Object* Method_invoke(Method* self,Object* object,...){
     long result = self->private->function(object);
     return Object_cast((void*)result,self->private->returnType);

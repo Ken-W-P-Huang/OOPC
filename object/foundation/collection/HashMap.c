@@ -60,11 +60,12 @@ static HashMapEntry* removeEntry(HashMap *self,int hash,Object* key,Object* valu
     HashMapEntry* entry;
     if(listArray != NULL  && (list =listArray[(self->private->capacity - 1) & hash]) != NULL){
         LinkedListIterator* iterator = LinkedList_getIterator(list);
+        const Class1* valueClass = Object_getClass(value);
         while(LinkedListIterator_hasNext(iterator)){
             entry = (HashMapEntry *)LinkedListIterator_next(iterator);
             if(HashMapEntry_getHash(entry) == hash
-               && (key != NULL && (*ObjectClazz->equals)(key,HashMapEntry_getKey(entry)))
-               && (entry->value == value || (!matchValue && value != NULL && ObjectClazz->equals(value,entry->value)))){
+               && (key != NULL && (*valueClass->equals)(key,HashMapEntry_getKey(entry)))
+               && (entry->value == value || (!matchValue && value != NULL && valueClass->equals(value,entry->value)))){
                 break;
             }
         }
@@ -196,11 +197,12 @@ bool HashMap_containsValue(HashMap *const self,Object *const value) {
     LinkedListIterator* iterator;
     HashMapEntry* entry;
     if(listArray != NULL && self->private->size > 0){
+        const Class1* valueClass = Object_getClass(value);
         for (int i = 0; i < length; ++i) {
             iterator = LinkedList_getIterator(list);
             while(LinkedListIterator_hasNext(iterator)){
                 entry = (HashMapEntry *)LinkedListIterator_next(iterator);
-                if(entry->value == value || (value != NULL && (*ObjectClazz->equals)(value,entry->value))){
+                if(entry->value == value || (value != NULL && (*valueClass->equals)(value,entry->value))){
                     return true;
                 }
             }

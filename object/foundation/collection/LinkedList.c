@@ -107,7 +107,7 @@ static void * unlinkFirst(LinkedList* self,LinkedListNode* first){
         next->prev = NULL;
     }
     self -> private -> size --;
-    Object_destroy(first);
+    Object_destroy((Object*)first);
     return element;
 }
 static void * unlinkLast(LinkedList* self,LinkedListNode* last){
