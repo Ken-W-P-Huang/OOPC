@@ -1,0 +1,45 @@
+function(findProgram return programName packageName)
+    set(count 0)
+    unset(programPath CACHE)
+    while (true)
+        if (${count} GREATER 3)
+            message(FATAL_ERROR "Error：fail to install ${programName}")
+        endif ()
+        find_program(programPath ${programName})
+        if ( ${programPath} STREQUAL "programPath-NOTFOUND")
+            message(STATUS "Installing ${programName}")
+            execute_process(COMMAND sudo apt-get -y install ${packageName})
+            math(EXPR count "${count} + 1" )
+        else()
+            set(${return} ${programPath}  PARENT_SCOPE)
+            message(STATUS "Found ${programPath}")
+            break()
+        endif ()
+    endwhile ()
+endfunction()
+
+macro(configureEnvironment )
+    #nasm
+    findProgramForUbuntu(program ${NASM})
+    set(NASM ${program} )
+    #gdb
+    findProgram(program gdb gdb)
+    set(GDB ${program} )
+    #cgdb
+    findProgram(program cgdb cgdb)
+    set(CGDB ${program} )
+    if (NOT ${IS_APP})
+        #qemu-system-i386
+        findProgram( program qemu-system-i386 "qemu")
+        set(QEMU ${program} )
+        #RUBY
+        findProgram(program ruby ruby)
+        set(RUBY ${program} )
+        #mkisofs
+        findProgram(program mkisofs "cdrtools")
+        set(MKISOFS ${program} )
+        #ld
+        findProgram(program i386-gnu-ld ${LD})
+        set(LD ${program} )
+    endif ()
+endmacro()

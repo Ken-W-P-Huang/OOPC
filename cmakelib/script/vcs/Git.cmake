@@ -1,0 +1,25 @@
+function(configureVCS)
+    copy("${CMAKE_LIB_PATH}/vcs/.gitignore" "${PROJECT_SOURCE_DIR}/.gitignore")
+    if (NOT EXISTS ${PROJECT_SOURCE_DIR}/.git)
+        execute_process(COMMAND git init
+                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+    endif ()
+    if(DEFINED GIT_REMOTES)
+        list(LENGTH GIT_REMOTES length)
+        math(EXPR index "${length} % 2" )
+        if (${index} EQUAL 0)
+            math(EXPR last "${length} - 1" )
+            foreach (index RANGE 0 ${last}-1 2)
+                list(GET GIT_REMOTES ${index} remoteName)
+                math(EXPR remoteAddressIndex "${index}+1" )
+                list(GET GIT_REMOTES ${remoteAddressIndex} remoteAddress)
+                execute_process(COMMAND git remote add ${remoteName} ${remoteAddress}
+                        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                        OUTPUT_QUIET
+                        ERROR_QUIET)
+            endforeach ()
+        else()
+            message(FATAL_ERROR "Error：GIT_REMOTES must be \"remoteName;remoteAddress\"!")
+        endif ()
+    endif()
+endfunction()

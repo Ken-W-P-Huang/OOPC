@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 2.8.2)
+project(${DL_PROJECT} NONE)
+include(ExternalProject)
+ExternalProject_Add(${DL_PROJECT}
+                    ${DL_UNPARSED_ARGUMENTS}
+                    TIMEOUT             "${DL_TIMEOUT}"
+                    SOURCE_DIR          "${DL_SOURCE_DIR}"
+                    BINARY_DIR          "${DL_BINARY_DIR}"
+                    CONFIGURE_COMMAND   "${DL_CONFIGURE_COMMAND}"
+                    BUILD_COMMAND       "${DL_BUILD_COMMAND}"
+                    INSTALL_COMMAND     "${DL_INSTALL_COMMAND}"
+                    TEST_COMMAND        "${DL_TEST_COMMAND}")
